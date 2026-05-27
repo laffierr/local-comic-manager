@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">漫画书架</string>
+    <string name="tab_home">首页</string>
+    <string name="tab_bookshelf">书架</string>
+    <string name="tab_favorites">收藏夹</string>
+    <string name="add_comic">添加漫画</string>
+    <string name="no_comics_yet">还没有漫画</string>
+    <string name="no_comics_hint">去书架页面添加你的第一本漫画吧</string>
+    <string name="random_picks">随机推荐</string>
+    <string name="recently_added">最近添加</string>
+    <string name="create_collection">新建收藏夹</string>
+    <string name="collection_name">收藏夹名称</string>
+    <string name="collection_description">描述（可选）</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="retry">重试</string>
+    <string name="go_to_bookshelf">去书架</string>
+    <string name="comic_title">漫画标题</string>
+    <string name="pages">页</string>
+    <string name="added_date">添加日期</string>
+    <string name="collections">所属收藏夹</string>
+    <string name="no_collections">暂无收藏夹</string>
+    <string name="no_collections_hint">先去收藏夹页面创建一个吧</string>
+    <string name="delete_comic_confirm">确定要删除这本漫画吗？</string>
+    <string name="delete_collection_confirm">确定要删除这个收藏夹吗？\n漫画本身不会被删除。</string>
+    <string name="add_to_collection">添加到收藏夹</string>
+</resources>
