@@ -57,4 +57,17 @@ interface TagDao {
         """
     )
     fun observeTagsForComic(comicId: Long): Flow<List<TagEntity>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT c.* FROM comics c
+        INNER JOIN comic_tag_cross_ref ct ON c.id = ct.comicId
+        WHERE ct.tagId IN (:tagIds)
+        GROUP BY c.id
+        HAVING COUNT(DISTINCT ct.tagId) = :tagCount
+        ORDER BY c.addedAtMillis DESC
+        """
+    )
+    fun observeComicsByTags(tagIds: List<Long>, tagCount: Int): Flow<List<ComicWithCollections>>
 }

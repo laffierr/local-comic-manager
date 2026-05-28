@@ -1,7 +1,7 @@
 package com.example.comiclibrary.ui.comicdetail
 
 import android.net.Uri
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -32,7 +31,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -47,7 +45,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,7 +56,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.comiclibrary.ui.component.ConfirmDeleteDialog
 import com.example.comiclibrary.ui.component.LoadingIndicator
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -71,9 +67,7 @@ fun ComicDetailScreen(
     viewModel: ComicDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
     var showOverflowMenu by remember { mutableStateOf(false) }
-    var showCollectionPicker by remember { mutableStateOf(false) }
 
     if (uiState.isLoading) { LoadingIndicator(); return }
     val comic = uiState.comic ?: return
@@ -109,13 +103,6 @@ fun ComicDetailScreen(
                             expanded = showOverflowMenu,
                             onDismissRequest = { showOverflowMenu = false }
                         ) {
-                            DropdownMenuItem(
-                                text = { Text("添加到收藏夹") },
-                                onClick = {
-                                    showOverflowMenu = false
-                                    showCollectionPicker = true
-                                }
-                            )
                             DropdownMenuItem(
                                 text = { Text("管理标签") },
                                 onClick = {
@@ -202,38 +189,6 @@ fun ComicDetailScreen(
                     }
                 }
 
-                // Collections section
-                Spacer(Modifier.height(16.dp))
-                HorizontalDivider()
-                Spacer(Modifier.height(12.dp))
-
-                Text("收藏夹", style = MaterialTheme.typography.titleMedium)
-
-                if (uiState.allCollections.isEmpty()) {
-                    Text(
-                        "暂无收藏夹",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                } else {
-                    uiState.allCollections.forEach { col ->
-                        val isMember = col.id in uiState.memberCollectionIds
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Checkbox(
-                                checked = isMember,
-                                onCheckedChange = { viewModel.toggleCollection(col.id, isMember) }
-                            )
-                            Column(modifier = Modifier.padding(start = 4.dp, top = 12.dp)) {
-                                Text(col.name, style = MaterialTheme.typography.bodyLarge)
-                                if (col.description.isNotBlank())
-                                    Text(col.description, style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                        }
-                    }
-                }
-
                 Spacer(Modifier.height(24.dp))
             }
         }
@@ -278,80 +233,4 @@ fun ComicDetailScreen(
         )
     }
 
-    // Collection picker dialog
-    if (showCollectionPicker) {
-        var newCollectionName by remember { mutableStateOf("") }
-        var showInlineCreate by remember { mutableStateOf(false) }
-        AlertDialog(
-            onDismissRequest = { showCollectionPicker = false },
-            title = { Text("添加到收藏夹") },
-            text = {
-                Column {
-                    if (uiState.allCollections.isEmpty() && !showInlineCreate) {
-                        Text("暂无收藏夹", modifier = Modifier.padding(bottom = 8.dp))
-                    } else {
-                        uiState.allCollections.forEach { col ->
-                            val isMember = col.id in uiState.memberCollectionIds
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { viewModel.toggleCollection(col.id, isMember) }
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Checkbox(
-                                    checked = isMember,
-                                    onCheckedChange = { viewModel.toggleCollection(col.id, isMember) }
-                                )
-                                Column(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
-                                    Text(col.name, style = MaterialTheme.typography.bodyLarge)
-                                    if (col.description.isNotBlank())
-                                        Text(col.description, style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                }
-                            }
-                        }
-                    }
-                    if (showInlineCreate) {
-                        Spacer(Modifier.height(8.dp))
-                        OutlinedTextField(
-                            value = newCollectionName,
-                            onValueChange = { newCollectionName = it },
-                            label = { Text("收藏夹名称") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    } else {
-                        Spacer(Modifier.height(8.dp))
-                        TextButton(
-                            onClick = { showInlineCreate = true },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("+ 新建收藏夹")
-                        }
-                    }
-                }
-            },
-            confirmButton = {
-                if (showInlineCreate) {
-                    TextButton(
-                        onClick = {
-                            viewModel.createAndAddToCollection(newCollectionName)
-                            showInlineCreate = false
-                            newCollectionName = ""
-                        },
-                        enabled = newCollectionName.isNotBlank()
-                    ) { Text("创建并添加") }
-                } else {
-                    TextButton(onClick = { showCollectionPicker = false }) { Text("完成") }
-                }
-            },
-            dismissButton = {
-                if (showInlineCreate) {
-                    TextButton(onClick = { showInlineCreate = false }) { Text("取消") }
-                } else {
-                    TextButton(onClick = { showCollectionPicker = false }) { Text("关闭") }
-                }
-            }
-        )
-    }
 }

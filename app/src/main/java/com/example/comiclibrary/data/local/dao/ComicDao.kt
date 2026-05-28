@@ -63,4 +63,7 @@ interface ComicDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM comics WHERE folderUri = :folderUri)")
     suspend fun existsByFolderUri(folderUri: String): Boolean
+
+    @Query("UPDATE comics SET coverUri = :coverUri WHERE id = :id")
+    suspend fun updateCoverUri(id: Long, coverUri: String?)
 }

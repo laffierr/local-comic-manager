@@ -18,7 +18,7 @@ data class BookshelfUiState(
     val selectedIds: Set<Long> = emptySet(),
     val showBatchTagDialog: Boolean = false,
     val showBatchCollectionDialog: Boolean = false,
-    val selectedTagId: Long? = null,
+    val selectedTagIds: Set<Long> = emptySet(),
     val selectedTagName: String? = null,
     val error: String? = null,
     val snackbarMessage: String? = null,

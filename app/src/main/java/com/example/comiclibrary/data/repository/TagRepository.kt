@@ -8,6 +8,7 @@ interface TagRepository {
     fun observeAllTags(): Flow<List<Tag>>
     fun observeTagsForComic(comicId: Long): Flow<List<Tag>>
     fun observeComicsByTag(tagId: Long): Flow<List<Comic>>
+    fun observeComicsByTags(tagIds: Set<Long>): Flow<List<Comic>>
 
     suspend fun createTag(name: String): Long
     suspend fun updateTag(id: Long, name: String)

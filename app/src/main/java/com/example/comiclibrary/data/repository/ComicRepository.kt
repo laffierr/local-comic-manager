@@ -20,4 +20,5 @@ interface ComicRepository {
     suspend fun deleteComic(id: Long)
     suspend fun updateLastReadAt(comicId: Long)
     suspend fun existsByFolderUri(folderUri: String): Boolean
+    suspend fun refreshCover(id: Long, folderUri: String)
 }

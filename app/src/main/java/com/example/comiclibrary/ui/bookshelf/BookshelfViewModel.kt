@@ -58,17 +58,25 @@ class BookshelfViewModel @Inject constructor(
             }) { it.toList() }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    fun selectTag(tagId: Long?, tagName: String?) {
-        _uiState.update { it.copy(selectedTagId = tagId, selectedTagName = tagName) }
+    fun toggleTagFilter(tagId: Long) {
+        _uiState.update { state ->
+            val newIds = state.selectedTagIds.toMutableSet()
+            if (newIds.contains(tagId)) newIds.remove(tagId) else newIds.add(tagId)
+            state.copy(selectedTagIds = newIds, selectedTagName = null)
+        }
+    }
+
+    fun clearTagFilter() {
+        _uiState.update { it.copy(selectedTagIds = emptySet(), selectedTagName = null) }
     }
 
     val comics: StateFlow<List<Comic>> = _uiState
-        .map { Triple(it.searchQuery, it.sortMode, it.selectedTagId) }
-        .flatMapLatest { (query, sort, tagId) ->
-            val baseFlow = if (tagId != null) {
-                tagRepository.observeComicsByTag(tagId)
-            } else {
-                comicRepository.observeAllComics()
+        .map { Triple(it.searchQuery, it.sortMode, it.selectedTagIds) }
+        .flatMapLatest { (query, sort, tagIds) ->
+            val baseFlow = when {
+                tagIds.isEmpty() -> comicRepository.observeAllComics()
+                tagIds.size == 1 -> tagRepository.observeComicsByTag(tagIds.first())
+                else -> tagRepository.observeComicsByTags(tagIds)
             }
             baseFlow.map { comics ->
                 val filtered = if (query.isBlank()) comics

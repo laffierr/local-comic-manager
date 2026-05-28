@@ -21,10 +21,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -44,6 +46,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -59,10 +62,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.example.comiclibrary.domain.model.Comic
 import com.example.comiclibrary.ui.component.ComicCoverCard
 import com.example.comiclibrary.ui.component.ConfirmDeleteDialog
@@ -174,7 +181,7 @@ fun BookshelfScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                // --- Header: Search with tag dropdown, Tag Rows ---
+                // --- Header: Search with tag dropdown, Tag Rows, Filtered Results ---
                 if (!uiState.selectionMode) {
                     // Search bar with expandable tag filter
                     item(key = "search") {
@@ -195,7 +202,7 @@ fun BookshelfScreen(
                                         Icon(
                                             Icons.Outlined.Sell,
                                             contentDescription = "标签筛选",
-                                            tint = if (uiState.selectedTagId != null || showTagFilter)
+                                            tint = if (uiState.selectedTagIds.isNotEmpty() || showTagFilter)
                                                 MaterialTheme.colorScheme.primary
                                             else MaterialTheme.colorScheme.onSurfaceVariant
                                         )
@@ -212,14 +219,15 @@ fun BookshelfScreen(
                                     Spacer(Modifier.height(6.dp))
                                     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                         FilterChip(
-                                            selected = uiState.selectedTagId == null,
-                                            onClick = { viewModel.selectTag(null, null) },
+                                            selected = uiState.selectedTagIds.isEmpty(),
+                                            onClick = { viewModel.clearTagFilter() },
                                             label = { Text("全部") }
                                         )
                                         allTags.forEach { tag ->
+                                            val isSelected = tag.id in uiState.selectedTagIds
                                             FilterChip(
-                                                selected = uiState.selectedTagId == tag.id,
-                                                onClick = { viewModel.selectTag(tag.id, tag.name) },
+                                                selected = isSelected,
+                                                onClick = { viewModel.toggleTagFilter(tag.id) },
                                                 label = { Text(tag.name) }
                                             )
                                         }
@@ -229,8 +237,8 @@ fun BookshelfScreen(
                         }
                     }
 
-                    // Horizontal tag rows (only when no tag filter active)
-                    if (uiState.selectedTagId == null) {
+                    if (uiState.selectedTagIds.isEmpty()) {
+                        // No tag filter active — show regular tag rows
                         if (comics.isNotEmpty()) {
                             item(key = "all_header") {
                                 Row(
@@ -307,6 +315,46 @@ fun BookshelfScreen(
                                     }
                                 }
                             }
+                        }
+                    } else {
+                        // Tags selected — show filtered comics
+                        val selectedNames = allTags
+                            .filter { it.id in uiState.selectedTagIds }
+                            .joinToString(" + ") { it.name }
+                        item(key = "filtered_header") {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "筛选: $selectedNames",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                TextButton(onClick = { viewModel.clearTagFilter() }) {
+                                    Text("清除")
+                                }
+                            }
+                        }
+                        items(comics, key = { it.id }) { comic ->
+                            ListItem(
+                                headlineContent = { Text(comic.title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                                supportingContent = { Text("${comic.pageCount} 页") },
+                                leadingContent = {
+                                    AsyncImage(
+                                        model = comic.coverUri?.let { Uri.parse(it) },
+                                        contentDescription = null,
+                                        modifier = Modifier.size(48.dp).clip(RoundedCornerShape(6.dp)),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                },
+                                modifier = Modifier.combinedClickable(
+                                    onClick = { onComicClick(comic.id) },
+                                    onLongClick = { viewModel.onLongPress(comic.id) }
+                                )
+                            )
                         }
                     }
                 }

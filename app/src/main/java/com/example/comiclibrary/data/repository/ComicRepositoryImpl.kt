@@ -1,10 +1,12 @@
 package com.example.comiclibrary.data.repository
 
+import android.net.Uri
 import com.example.comiclibrary.data.local.dao.ComicDao
 import com.example.comiclibrary.data.local.entity.ComicEntity
 import com.example.comiclibrary.data.model.toDomain
 import com.example.comiclibrary.domain.model.Comic
 import com.example.comiclibrary.domain.model.CoverScanResult
+import com.example.comiclibrary.util.ImageEnumerator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -13,7 +15,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ComicRepositoryImpl @Inject constructor(
-    private val comicDao: ComicDao
+    private val comicDao: ComicDao,
+    private val imageEnumerator: ImageEnumerator
 ) : ComicRepository {
 
     override fun observeAllComics(): Flow<List<Comic>> =
@@ -72,5 +75,11 @@ class ComicRepositoryImpl @Inject constructor(
 
     override suspend fun existsByFolderUri(folderUri: String): Boolean {
         return comicDao.existsByFolderUri(folderUri)
+    }
+
+    override suspend fun refreshCover(id: Long, folderUri: String) {
+        val files = imageEnumerator.listImageFiles(Uri.parse(folderUri))
+        val newCover = files.firstOrNull()?.uri?.toString()
+        comicDao.updateCoverUri(id, newCover)
     }
 }

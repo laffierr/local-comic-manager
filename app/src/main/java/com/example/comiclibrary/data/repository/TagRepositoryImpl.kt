@@ -45,6 +45,11 @@ class TagRepositoryImpl @Inject constructor(
         tagDao.addTagToComic(ComicTagCrossRef(comicId = comicId, tagId = tagId))
     }
 
+    override fun observeComicsByTags(tagIds: Set<Long>): Flow<List<Comic>> =
+        tagDao.observeComicsByTags(tagIds.toList(), tagIds.size)
+            .map { list -> list.map { it.toDomain() } }
+            .distinctUntilChanged()
+
     override suspend fun removeTagFromComic(comicId: Long, tagId: Long) {
         tagDao.removeTagFromComic(ComicTagCrossRef(comicId = comicId, tagId = tagId))
     }

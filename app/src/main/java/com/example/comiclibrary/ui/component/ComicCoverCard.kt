@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.CheckCircle
@@ -62,6 +63,17 @@ fun ComicCoverCard(
         border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
     ) {
         Box {
+            // Fallback placeholder when cover fails to load
+            Icon(
+                Icons.AutoMirrored.Filled.MenuBook,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(0.72f)
+                    .padding(24.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+            )
+
             AsyncImage(
                 model = comic.coverUri?.let { Uri.parse(it) },
                 contentDescription = comic.title,

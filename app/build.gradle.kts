@@ -14,8 +14,8 @@ android {
         applicationId = "com.example.comiclibrary"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 13
-        versionName = "0.5.8"
+        versionCode = 14
+        versionName = "0.5.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
