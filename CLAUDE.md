@@ -2,7 +2,20 @@
 
 This file provides guidance to Claude Code when working with code in this repository.
 
-**展开新对话时，请先读取 README.md 了解软件功能列表和当前状态。**
+## 对话语言
+
+**所有与本项目的对话请使用中文进行交流。** 代码、变量名、技术术语可使用英文，但解释、讨论、commit message 等均使用中文。
+
+## 新对话快速上手
+
+展开新对话时，按以下顺序快速了解项目：
+
+1. **读取 README.md** — 了解软件功能列表、技术栈、版本历史
+2. **读取本文件** — 了解架构、构建命令、关键规则
+3. **检查 git log** — `git log --oneline -10` 了解最近改动
+4. **检查记忆系统** — 读取 `memory/MEMORY.md` 了解用户偏好和历史决策
+
+项目的全局 Tips（构建命令、JDK 位置、规则约定等）都记录在本文件中，修改后同步更新。
 
 ## Project Overview
 
@@ -84,8 +97,18 @@ Key points:
 
 ### Version Bumping
 每次修改完 bug 或完成功能后，必须在 `app/build.gradle.kts` 中同时推进 `versionCode` 和 `versionName`：
-- `versionCode` 递增 1 (当前 12 → 13 → 14...)
-- `versionName` 按语义化版本递增 (当前 0.5.7)
+- `versionCode` 递增 1 (当前 15 → 16 → 17...)
+- `versionName` 按语义化版本递增 (当前 0.6.0)
+
+版本号规则（语义化版本 SemVer）：
+
+| 改动类型 | 升哪个 | 示例 |
+|----------|--------|------|
+| 修 bug、小幅调整 | PATCH | 0.6.0 → 0.6.1 |
+| 加新功能（兼容旧版） | MINOR | 0.6.0 → 0.7.0 |
+| 破坏性改动（不兼容旧版） | MAJOR | 0.6.0 → 1.0.0 |
+
+正式发布后（Google Play 上线）建议跳到 `1.0.0`。`versionCode` 只是一个递增整数，Google Play 用它判断哪个包更新——只能递增、不能重复。
 
 ### Git Commits
 每次代码改动完成后，必须执行一次 git commit，记录本次更改的内容。commit message 使用中文描述。
@@ -123,6 +146,23 @@ AGP 8.7.3 does not officially support compileSdk 36. To suppress the warning, `g
 ```
 android.suppressUnsupportedCompileSdk=36
 ```
+
+### 记忆系统 (Memory)
+
+项目的持久化记忆存储在 `memory/` 目录中，包含：
+- `MEMORY.md` — 所有记忆的索引文件，每行一个条目
+- 用户偏好、项目决策、反馈记录等
+
+新对话时应检查 `memory/MEMORY.md` 了解用户历史偏好。用户明确要求记住某事时，写入对应的记忆文件。
+
+### 配色设计理念
+
+当前使用**品牌主色 + 中性辅助**方案（方案 C）：
+- **primary** / **primaryContainer**：品牌色，饱和度高，有辨识度
+- **secondary** / **secondaryContainer**：接近中性色，只带微量品牌色相
+- **tertiary** / **tertiaryContainer**：几乎完全中性，与 surface 接近
+
+这样设计的原因：Material 3 的 FAB 使用 `primaryContainer`，FilterChip 选中态使用 `secondaryContainer`。如果 secondary 色相与 primary 差异过大，按钮颜色会不统一。将所有 accent 收敛到同一色系解决了这个问题。
 
 ## File Index
 
