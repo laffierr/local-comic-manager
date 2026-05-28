@@ -12,3 +12,13 @@ data class FavoritesUiState(
     val menuCollectionId: Long? = null,
     val snackbarMessage: String? = null
 )
+
+/** 预计算固定属性，避免每项重复判断 */
+@Immutable
+data class CollectionItem(
+    val id: Long,
+    val name: String,
+    val description: String,
+    val isPinned: Boolean,
+    val isFavorites: Boolean
+)

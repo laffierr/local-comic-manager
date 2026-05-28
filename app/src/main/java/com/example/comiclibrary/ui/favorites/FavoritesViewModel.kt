@@ -3,7 +3,6 @@ package com.example.comiclibrary.ui.favorites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.comiclibrary.data.repository.CollectionRepository
-import com.example.comiclibrary.domain.model.ComicCollection
 import com.example.comiclibrary.util.FavoriteManager
 import com.example.comiclibrary.util.SettingsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,14 +23,22 @@ class FavoritesViewModel @Inject constructor(
     private val settingsManager: SettingsManager
 ) : ViewModel() {
 
-    val pinnedIds: StateFlow<Set<String>> = settingsManager.pinnedCollectionIds
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
-
-    val collections: StateFlow<List<ComicCollection>> = combine(
+    /** 预计算 isPinned / isFavorites 的列表，避免每项 toString() 转换和重复判断 */
+    val collections: StateFlow<List<CollectionItem>> = combine(
         collectionRepository.observeAllCollections().catch { emit(emptyList()) },
         settingsManager.pinnedCollectionIds
-    ) { list, pinned ->
-        list.sortedByDescending { it.name == FavoriteManager.FAVORITES_COLLECTION_NAME || it.id.toString() in pinned }
+    ) { list, pinnedStr ->
+        val pinnedLong = pinnedStr.mapNotNull { it.toLongOrNull() }.toSet()
+        list.sortedByDescending { it.id in pinnedLong || it.name == FavoriteManager.FAVORITES_COLLECTION_NAME }
+            .map { col ->
+                CollectionItem(
+                    id = col.id,
+                    name = col.name,
+                    description = col.description,
+                    isPinned = col.id in pinnedLong || col.name == FavoriteManager.FAVORITES_COLLECTION_NAME,
+                    isFavorites = col.name == FavoriteManager.FAVORITES_COLLECTION_NAME
+                )
+            }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val _uiState = MutableStateFlow(FavoritesUiState())
@@ -78,7 +85,7 @@ class FavoritesViewModel @Inject constructor(
         val state = _uiState.value
         if (!state.selectionMode) return
         val target = collections.value.find { it.id == collectionId }
-        if (target?.name == FavoriteManager.FAVORITES_COLLECTION_NAME) return
+        if (target?.isFavorites == true) return
         val newSet = state.selectedIds.toMutableSet()
         if (newSet.contains(collectionId)) newSet.remove(collectionId) else newSet.add(collectionId)
         if (newSet.isEmpty()) {
@@ -94,9 +101,7 @@ class FavoritesViewModel @Inject constructor(
 
     fun onSelectAll() {
         _uiState.value = _uiState.value.copy(
-            selectedIds = collections.value
-                .filter { it.name != FavoriteManager.FAVORITES_COLLECTION_NAME }
-                .map { it.id }.toSet()
+            selectedIds = collections.value.filter { !it.isFavorites }.map { it.id }.toSet()
         )
     }
 
@@ -115,7 +120,7 @@ class FavoritesViewModel @Inject constructor(
     fun confirmDelete() {
         val id = _uiState.value.deleteConfirmCollectionId ?: return
         val target = collections.value.find { it.id == id }
-        if (target?.name == FavoriteManager.FAVORITES_COLLECTION_NAME) {
+        if (target?.isFavorites == true) {
             _uiState.value = FavoritesUiState()
             return
         }

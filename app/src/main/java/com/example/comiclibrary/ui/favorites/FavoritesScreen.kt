@@ -64,7 +64,6 @@ fun FavoritesScreen(
 ) {
     val collections by viewModel.collections.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val pinnedIds by viewModel.pinnedIds.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.snackbarMessage) {
@@ -124,117 +123,112 @@ fun FavoritesScreen(
                 modifier = Modifier.padding(innerPadding)
             )
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                items(
-                    items = collections,
-                    key = { it.id }
-                ) { collection ->
-                    val isPinned = collection.id.toString() in pinnedIds
-                        || collection.name == com.example.comiclibrary.util.FavoriteManager.FAVORITES_COLLECTION_NAME
-                    val isFavorites = collection.name == com.example.comiclibrary.util.FavoriteManager.FAVORITES_COLLECTION_NAME
+            // 当前打开菜单的收藏夹数据（用于顶层的共享 DropdownMenu）
+            val menuItem = uiState.menuCollectionId?.let { mid ->
+                collections.find { it.id == mid }
+            }
 
-                    ListItem(
-                        headlineContent = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(collection.name)
-                                if (isPinned) {
-                                    Icon(
-                                        Icons.Filled.PushPin,
-                                        contentDescription = "已置顶",
-                                        modifier = Modifier.padding(start = 4.dp).size(16.dp),
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        },
-                        supportingContent = {
-                            if (collection.description.isNotBlank()) {
-                                Text(
-                                    text = collection.description,
-                                    maxLines = 2
-                                )
-                            }
-                        },
-                        leadingContent = {
-                            if (uiState.selectionMode) {
-                                if (!isFavorites) {
-                                    Checkbox(
-                                        checked = collection.id in uiState.selectedIds,
-                                        onCheckedChange = { viewModel.onToggleSelection(collection.id) }
-                                    )
-                                }
-                            }
-                        },
-                        trailingContent = {
-                            if (!uiState.selectionMode) {
-                                Row {
-                                    IconButton(onClick = { viewModel.startEdit(collection.id) }) {
-                                        Icon(Icons.Outlined.Edit, contentDescription = "编辑")
+            Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(
+                        items = collections,
+                        key = { it.id }
+                    ) { item ->
+                        ListItem(
+                            headlineContent = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(item.name)
+                                    if (item.isPinned) {
+                                        Icon(
+                                            Icons.Filled.PushPin,
+                                            contentDescription = "已置顶",
+                                            modifier = Modifier.padding(start = 4.dp).size(16.dp),
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
                                     }
-                                    Box {
-                                        IconButton(onClick = { viewModel.showMenu(collection.id) }) {
+                                }
+                            },
+                            supportingContent = {
+                                if (item.description.isNotBlank()) {
+                                    Text(text = item.description, maxLines = 2)
+                                }
+                            },
+                            leadingContent = {
+                                if (uiState.selectionMode && !item.isFavorites) {
+                                    Checkbox(
+                                        checked = item.id in uiState.selectedIds,
+                                        onCheckedChange = { viewModel.onToggleSelection(item.id) }
+                                    )
+                                }
+                            },
+                            trailingContent = {
+                                if (!uiState.selectionMode) {
+                                    Row {
+                                        IconButton(onClick = { viewModel.startEdit(item.id) }) {
+                                            Icon(Icons.Outlined.Edit, contentDescription = "编辑")
+                                        }
+                                        IconButton(onClick = { viewModel.showMenu(item.id) }) {
                                             Icon(Icons.Filled.MoreVert, contentDescription = "更多")
                                         }
-                                        DropdownMenu(
-                                            expanded = uiState.menuCollectionId == collection.id,
-                                            onDismissRequest = { viewModel.dismissMenu() }
-                                        ) {
-                                            DropdownMenuItem(
-                                                text = { Text("编辑") },
-                                                onClick = {
-                                                    viewModel.dismissMenu()
-                                                    viewModel.startEdit(collection.id)
-                                                },
-                                                leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) }
-                                            )
-                                            val isMenuPinned = collection.id.toString() in pinnedIds
-                                            DropdownMenuItem(
-                                                text = { Text(if (isMenuPinned) "取消置顶" else "置顶") },
-                                                onClick = { viewModel.togglePin(collection.id) },
-                                                leadingIcon = {
-                                                    Icon(
-                                                        if (isMenuPinned) Icons.Filled.PushPin else Icons.Outlined.PushPin,
-                                                        contentDescription = null
-                                                    )
-                                                }
-                                            )
-                                            if (!isFavorites) {
-                                                DropdownMenuItem(
-                                                    text = { Text("删除") },
-                                                    onClick = {
-                                                        viewModel.dismissMenu()
-                                                        viewModel.requestDelete(collection.id)
-                                                    },
-                                                    leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = null) }
-                                                )
-                                            }
-                                            DropdownMenuItem(
-                                                text = { Text("多选") },
-                                                onClick = {
-                                                    viewModel.dismissMenu()
-                                                    viewModel.enterSelectionMode(collection.id)
-                                                },
-                                                leadingIcon = { Icon(Icons.Outlined.CheckCircle, contentDescription = null) }
-                                            )
-                                        }
                                     }
                                 }
-                            }
-                        },
-                        modifier = Modifier.combinedClickable(
-                            onClick = {
-                                if (uiState.selectionMode) viewModel.onToggleSelection(collection.id)
-                                else onCollectionClick(collection.id)
                             },
-                            onLongClick = {
-                                if (!uiState.selectionMode) viewModel.onLongPress(collection.id)
+                            modifier = Modifier.combinedClickable(
+                                onClick = {
+                                    if (uiState.selectionMode) viewModel.onToggleSelection(item.id)
+                                    else onCollectionClick(item.id)
+                                },
+                                onLongClick = {
+                                    if (!uiState.selectionMode) viewModel.onLongPress(item.id)
+                                }
+                            )
+                        )
+                    }
+                }
+
+                // 共享 DropdownMenu，只渲染一次，不在每个 item 里重复
+                if (menuItem != null) {
+                    DropdownMenu(
+                        expanded = true,
+                        onDismissRequest = { viewModel.dismissMenu() }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("编辑") },
+                            onClick = {
+                                viewModel.dismissMenu()
+                                viewModel.startEdit(menuItem.id)
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(if (menuItem.isPinned) "取消置顶" else "置顶") },
+                            onClick = { viewModel.togglePin(menuItem.id) },
+                            leadingIcon = {
+                                Icon(
+                                    if (menuItem.isPinned) Icons.Filled.PushPin else Icons.Outlined.PushPin,
+                                    contentDescription = null
+                                )
                             }
                         )
-                    )
+                        if (!menuItem.isFavorites) {
+                            DropdownMenuItem(
+                                text = { Text("删除") },
+                                onClick = {
+                                    viewModel.dismissMenu()
+                                    viewModel.requestDelete(menuItem.id)
+                                },
+                                leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = null) }
+                            )
+                        }
+                        DropdownMenuItem(
+                            text = { Text("多选") },
+                            onClick = {
+                                viewModel.dismissMenu()
+                                viewModel.enterSelectionMode(menuItem.id)
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.CheckCircle, contentDescription = null) }
+                        )
+                    }
                 }
             }
         }
