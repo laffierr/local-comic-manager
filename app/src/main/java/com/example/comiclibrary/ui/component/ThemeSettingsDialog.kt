@@ -32,12 +32,12 @@ import com.example.comiclibrary.util.ThemeColor
 import com.example.comiclibrary.util.ThemeMode
 
 private val colorMap = mapOf(
-    ThemeColor.PURPLE to Color(0xFF6200EE),
-    ThemeColor.BLUE to Color(0xFF1565C0),
-    ThemeColor.GREEN to Color(0xFF2E7D32),
-    ThemeColor.ROSE to Color(0xFFC2185B),
-    ThemeColor.ORANGE to Color(0xFFE65100),
-    ThemeColor.TEAL to Color(0xFF00695C)
+    ThemeColor.PURPLE to Color(0xFF6750A4),
+    ThemeColor.BLUE to Color(0xFF1B6EF3),
+    ThemeColor.GREEN to Color(0xFF38853B),
+    ThemeColor.ROSE to Color(0xFFBE2E62),
+    ThemeColor.ORANGE to Color(0xFFCC5800),
+    ThemeColor.TEAL to Color(0xFF007A6B)
 )
 
 @OptIn(ExperimentalLayoutApi::class)

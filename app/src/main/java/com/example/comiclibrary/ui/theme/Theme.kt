@@ -18,147 +18,79 @@ fun ComicLibraryTheme(
     themeColor: ThemeColor = ThemeColor.PURPLE,
     content: @Composable () -> Unit
 ) {
+    val a = accentFor(themeColor)
+
     val colorScheme = if (darkTheme) {
         darkColorScheme(
-            primary = when (themeColor) {
-                ThemeColor.PURPLE -> PurplePrimary
-                ThemeColor.BLUE -> BluePrimary
-                ThemeColor.GREEN -> GreenPrimary
-                ThemeColor.ROSE -> RosePrimary
-                ThemeColor.ORANGE -> OrangePrimary
-                ThemeColor.TEAL -> TealPrimary
-            },
-            onPrimary = DarkOnPrimary,
-            primaryContainer = when (themeColor) {
-                ThemeColor.PURPLE -> PurplePrimaryContainer
-                ThemeColor.BLUE -> BluePrimaryContainer
-                ThemeColor.GREEN -> GreenPrimaryContainer
-                ThemeColor.ROSE -> RosePrimaryContainer
-                ThemeColor.ORANGE -> OrangePrimaryContainer
-                ThemeColor.TEAL -> TealPrimaryContainer
-            },
-            onPrimaryContainer = DarkOnPrimaryContainer,
-            secondary = when (themeColor) {
-                ThemeColor.PURPLE -> PurpleSecondary
-                ThemeColor.BLUE -> BlueSecondary
-                ThemeColor.GREEN -> GreenSecondary
-                ThemeColor.ROSE -> RoseSecondary
-                ThemeColor.ORANGE -> OrangeSecondary
-                ThemeColor.TEAL -> TealSecondary
-            },
-            onSecondary = DarkOnPrimary,
-            secondaryContainer = when (themeColor) {
-                ThemeColor.PURPLE -> PurpleSecondaryContainer
-                ThemeColor.BLUE -> BlueSecondaryContainer
-                ThemeColor.GREEN -> GreenSecondaryContainer
-                ThemeColor.ROSE -> RoseSecondaryContainer
-                ThemeColor.ORANGE -> OrangeSecondaryContainer
-                ThemeColor.TEAL -> TealSecondaryContainer
-            },
-            onSecondaryContainer = DarkOnPrimaryContainer,
-            tertiary = when (themeColor) {
-                ThemeColor.PURPLE -> PurpleTertiary
-                ThemeColor.BLUE -> BlueTertiary
-                ThemeColor.GREEN -> GreenTertiary
-                ThemeColor.ROSE -> RoseTertiary
-                ThemeColor.ORANGE -> OrangeTertiary
-                ThemeColor.TEAL -> TealTertiary
-            },
-            onTertiary = DarkOnPrimary,
-            tertiaryContainer = when (themeColor) {
-                ThemeColor.PURPLE -> PurpleTertiaryContainer
-                ThemeColor.BLUE -> BlueTertiaryContainer
-                ThemeColor.GREEN -> GreenTertiaryContainer
-                ThemeColor.ROSE -> RoseTertiaryContainer
-                ThemeColor.ORANGE -> OrangeTertiaryContainer
-                ThemeColor.TEAL -> TealTertiaryContainer
-            },
-            onTertiaryContainer = DarkOnPrimaryContainer,
-            background = DarkBackground,
-            onBackground = DarkOnSurface,
-            surface = DarkSurface,
+            // Primary
+            primary = a.primaryDark,
+            onPrimary = a.onPrimaryDark,
+            primaryContainer = a.primaryContainerDark,
+            onPrimaryContainer = a.onPrimaryContainerDark,
+            // Secondary
+            secondary = a.secondaryDark,
+            onSecondary = a.onSecondaryDark,
+            secondaryContainer = a.secondaryContainerDark,
+            onSecondaryContainer = a.onSecondaryContainerDark,
+            // Tertiary
+            tertiary = a.tertiaryDark,
+            onTertiary = a.onTertiaryDark,
+            tertiaryContainer = a.tertiaryContainerDark,
+            onTertiaryContainer = a.onTertiaryContainerDark,
+            // Surfaces — neutral, no tint
+            surfaceDim = Dark_SurfaceDim,
+            surface = Dark_Surface,
+            surfaceBright = Dark_SurfaceBright,
+            surfaceContainerLowest = Dark_ContainerLowest,
+            surfaceContainerLow = Dark_ContainerLow,
+            surfaceContainer = Dark_Container,
+            surfaceContainerHigh = Dark_ContainerHigh,
+            surfaceContainerHighest = Dark_ContainerHighest,
             onSurface = DarkOnSurface,
-            surfaceVariant = DarkSurfaceVariant,
             onSurfaceVariant = DarkOnSurfaceVariant,
-            surfaceContainerLowest = DarkSurfaceContainerLowest,
-            surfaceContainerLow = DarkSurfaceContainerLow,
-            surfaceContainer = DarkSurfaceContainer,
-            surfaceContainerHigh = DarkSurfaceContainerHigh,
-            surfaceContainerHighest = DarkSurfaceContainerHighest,
+            outline = DarkOutline,
+            outlineVariant = DarkOutlineVariant,
+            // Error
             error = DarkError,
             onError = DarkOnError,
-            outline = DarkOutline
+            errorContainer = DarkErrorContainer,
+            onErrorContainer = DarkOnErrorContainer
         )
     } else {
         lightColorScheme(
-            primary = when (themeColor) {
-                ThemeColor.PURPLE -> PurplePrimaryLight
-                ThemeColor.BLUE -> BluePrimaryLight
-                ThemeColor.GREEN -> GreenPrimaryLight
-                ThemeColor.ROSE -> RosePrimaryLight
-                ThemeColor.ORANGE -> OrangePrimaryLight
-                ThemeColor.TEAL -> TealPrimaryLight
-            },
-            onPrimary = LightOnPrimary,
-            primaryContainer = when (themeColor) {
-                ThemeColor.PURPLE -> PurplePrimaryContainerLight
-                ThemeColor.BLUE -> BluePrimaryContainerLight
-                ThemeColor.GREEN -> GreenPrimaryContainerLight
-                ThemeColor.ROSE -> RosePrimaryContainerLight
-                ThemeColor.ORANGE -> OrangePrimaryContainerLight
-                ThemeColor.TEAL -> TealPrimaryContainerLight
-            },
-            onPrimaryContainer = LightOnPrimaryContainer,
-            secondary = when (themeColor) {
-                ThemeColor.PURPLE -> PurpleSecondaryLight
-                ThemeColor.BLUE -> BlueSecondaryLight
-                ThemeColor.GREEN -> GreenSecondaryLight
-                ThemeColor.ROSE -> RoseSecondaryLight
-                ThemeColor.ORANGE -> OrangeSecondaryLight
-                ThemeColor.TEAL -> TealSecondaryLight
-            },
-            onSecondary = LightOnPrimary,
-            secondaryContainer = when (themeColor) {
-                ThemeColor.PURPLE -> PurpleSecondaryContainerLight
-                ThemeColor.BLUE -> BlueSecondaryContainerLight
-                ThemeColor.GREEN -> GreenSecondaryContainerLight
-                ThemeColor.ROSE -> RoseSecondaryContainerLight
-                ThemeColor.ORANGE -> OrangeSecondaryContainerLight
-                ThemeColor.TEAL -> TealSecondaryContainerLight
-            },
-            onSecondaryContainer = LightOnPrimaryContainer,
-            tertiary = when (themeColor) {
-                ThemeColor.PURPLE -> PurpleTertiaryLight
-                ThemeColor.BLUE -> BlueTertiaryLight
-                ThemeColor.GREEN -> GreenTertiaryLight
-                ThemeColor.ROSE -> RoseTertiaryLight
-                ThemeColor.ORANGE -> OrangeTertiaryLight
-                ThemeColor.TEAL -> TealTertiaryLight
-            },
-            onTertiary = LightOnPrimary,
-            tertiaryContainer = when (themeColor) {
-                ThemeColor.PURPLE -> PurpleTertiaryContainerLight
-                ThemeColor.BLUE -> BlueTertiaryContainerLight
-                ThemeColor.GREEN -> GreenTertiaryContainerLight
-                ThemeColor.ROSE -> RoseTertiaryContainerLight
-                ThemeColor.ORANGE -> OrangeTertiaryContainerLight
-                ThemeColor.TEAL -> TealTertiaryContainerLight
-            },
-            onTertiaryContainer = LightOnPrimaryContainer,
-            background = LightBackground,
-            onBackground = LightOnSurface,
-            surface = LightSurface,
+            // Primary
+            primary = a.primaryLight,
+            onPrimary = a.onPrimaryLight,
+            primaryContainer = a.primaryContainerLight,
+            onPrimaryContainer = a.onPrimaryContainerLight,
+            // Secondary
+            secondary = a.secondaryLight,
+            onSecondary = a.onSecondaryLight,
+            secondaryContainer = a.secondaryContainerLight,
+            onSecondaryContainer = a.onSecondaryContainerLight,
+            // Tertiary
+            tertiary = a.tertiaryLight,
+            onTertiary = a.onTertiaryLight,
+            tertiaryContainer = a.tertiaryContainerLight,
+            onTertiaryContainer = a.onTertiaryContainerLight,
+            // Surfaces — neutral, no tint
+            surfaceDim = Light_SurfaceDim,
+            surface = Light_Surface,
+            surfaceBright = Light_SurfaceBright,
+            surfaceContainerLowest = Light_ContainerLowest,
+            surfaceContainerLow = Light_ContainerLow,
+            surfaceContainer = Light_Container,
+            surfaceContainerHigh = Light_ContainerHigh,
+            surfaceContainerHighest = Light_ContainerHighest,
             onSurface = LightOnSurface,
-            surfaceVariant = LightSurfaceVariant,
             onSurfaceVariant = LightOnSurfaceVariant,
-            surfaceContainerLowest = LightSurfaceContainerLowest,
-            surfaceContainerLow = LightSurfaceContainerLow,
-            surfaceContainer = LightSurfaceContainer,
-            surfaceContainerHigh = LightSurfaceContainerHigh,
-            surfaceContainerHighest = LightSurfaceContainerHighest,
+            outline = LightOutline,
+            outlineVariant = LightOutlineVariant,
+            // Error
             error = LightError,
             onError = LightOnError,
-            outline = LightOutline
+            errorContainer = LightErrorContainer,
+            onErrorContainer = LightOnErrorContainer
         )
     }
 

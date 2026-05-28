@@ -2,138 +2,169 @@ package com.example.comiclibrary.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ===== Neutral surfaces — shared across all theme colors =====
+// ===== Neutral surfaces — identical across all theme colors =====
+// Dark theme: tones from 4 (darkest) to 24 (lightest elevated surface)
+// Light theme: tones from 87 (darkest elevated) to 100 (lightest base)
 
-// Dark mode neutral surfaces
-val DarkBackground = Color(0xFF121212)
-val DarkSurface = Color(0xFF121212)
-val DarkSurfaceVariant = Color(0xFF1E1E1E)
-val DarkSurfaceContainerLowest = Color(0xFF0A0A0A)
-val DarkSurfaceContainerLow = Color(0xFF161616)
-val DarkSurfaceContainer = Color(0xFF1E1E1E)
-val DarkSurfaceContainerHigh = Color(0xFF282828)
-val DarkSurfaceContainerHighest = Color(0xFF323232)
-val DarkOnSurface = Color(0xFFE8E8E8)
-val DarkOnSurfaceVariant = Color(0xFF999999)
-val DarkOutline = Color(0xFF666666)
-val DarkError = Color(0xFFCF6679)
-val DarkOnError = Color(0xFF1C1B1F)
+// Dark neutral surfaces — tone hierarchy builds upward (higher = lighter = more elevated)
+val Dark_SurfaceDim = Color(0xFF0E0E0E)          // tone ~4
+val Dark_Surface = Color(0xFF121212)             // tone ~6
+val Dark_SurfaceBright = Color(0xFF181818)       // tone ~8
+val Dark_ContainerLowest = Color(0xFF0E0E0E)     // tone ~4
+val Dark_ContainerLow = Color(0xFF161616)        // tone ~10
+val Dark_Container = Color(0xFF1C1C1E)           // tone ~12
+val Dark_ContainerHigh = Color(0xFF242428)       // tone ~17
+val Dark_ContainerHighest = Color(0xFF2E2E31)    // tone ~22
+val DarkOnSurface = Color(0xFFE3E2E6)                    // tone ~92
+val DarkOnSurfaceVariant = Color(0xFFC4C3C8)             // tone ~80
+val DarkOutline = Color(0xFF8E8D93)                      // tone ~60
+val DarkOutlineVariant = Color(0xFF48474D)               // tone ~30
+val DarkError = Color(0xFFFFB4AB)
+val DarkOnError = Color(0xFF690005)
+val DarkErrorContainer = Color(0xFF93000A)
+val DarkOnErrorContainer = Color(0xFFFFDAD6)
 
-// Light mode neutral surfaces
-val LightBackground = Color(0xFFF5F5F5)
-val LightSurface = Color(0xFFF5F5F5)
-val LightSurfaceVariant = Color(0xFFE8E8E8)
-val LightSurfaceContainerLowest = Color(0xFFF0F0F0)
-val LightSurfaceContainerLow = Color(0xFFF8F8F8)
-val LightSurfaceContainer = Color(0xFFFFFFFF)
-val LightSurfaceContainerHigh = Color(0xFFECECEC)
-val LightSurfaceContainerHighest = Color(0xFFE0E0E0)
-val LightOnSurface = Color(0xFF1C1B1F)
-val LightOnSurfaceVariant = Color(0xFF49454F)
-val LightOutline = Color(0xFF999999)
-val LightError = Color(0xFFB3261E)
+// Light neutral surfaces — tone hierarchy builds downward (lower = darker = more elevated)
+val Light_SurfaceDim = Color(0xFFDBD9DE)         // tone ~87
+val Light_Surface = Color(0xFFF8F8FB)            // tone ~98
+val Light_SurfaceBright = Color(0xFFF8F8FB)      // tone ~98
+val Light_ContainerLowest = Color(0xFFFFFFFF)     // tone 100
+val Light_ContainerLow = Color(0xFFF2F1F5)       // tone ~96
+val Light_Container = Color(0xFFECEBEF)          // tone ~94
+val Light_ContainerHigh = Color(0xFFE6E5EA)      // tone ~92
+val Light_ContainerHighest = Color(0xFFE0DFE4)   // tone ~90
+val LightOnSurface = Color(0xFF1C1B1F)                   // tone ~10
+val LightOnSurfaceVariant = Color(0xFF49454F)            // tone ~30
+val LightOutline = Color(0xFF79747E)                     // tone ~50
+val LightOutlineVariant = Color(0xFFCAC4D0)              // tone ~80
+val LightError = Color(0xFFBA1A1A)
 val LightOnError = Color(0xFFFFFFFF)
+val LightErrorContainer = Color(0xFFFFDAD6)
+val LightOnErrorContainer = Color(0xFF410002)
 
-// ===== Dark theme primaries (lighter, visible on dark backgrounds) =====
-val PurplePrimary = Color(0xFFB388FF)
-val BluePrimary = Color(0xFF82B1FF)
-val GreenPrimary = Color(0xFF81C784)
-val RosePrimary = Color(0xFFF48FB1)
-val OrangePrimary = Color(0xFFFFB74D)
-val TealPrimary = Color(0xFF80CBC4)
+// ===== Theme accent palettes =====
+// Each theme color defines 3 accent hues: primary, secondary, tertiary
+// Values for dark (tone ~80 primary, ~30 container) and light (tone ~40 primary, ~90 container)
 
-// ===== Light theme primaries (darker, good contrast on light backgrounds) =====
-val PurplePrimaryLight = Color(0xFF6200EE)
-val BluePrimaryLight = Color(0xFF1565C0)
-val GreenPrimaryLight = Color(0xFF2E7D32)
-val RosePrimaryLight = Color(0xFFC2185B)
-val OrangePrimaryLight = Color(0xFFE65100)
-val TealPrimaryLight = Color(0xFF00695C)
+data class AccentSet(
+    val primaryDark: Color, val onPrimaryDark: Color,
+    val primaryContainerDark: Color, val onPrimaryContainerDark: Color,
+    val secondaryDark: Color, val onSecondaryDark: Color,
+    val secondaryContainerDark: Color, val onSecondaryContainerDark: Color,
+    val tertiaryDark: Color, val onTertiaryDark: Color,
+    val tertiaryContainerDark: Color, val onTertiaryContainerDark: Color,
+    val primaryLight: Color, val onPrimaryLight: Color,
+    val primaryContainerLight: Color, val onPrimaryContainerLight: Color,
+    val secondaryLight: Color, val onSecondaryLight: Color,
+    val secondaryContainerLight: Color, val onSecondaryContainerLight: Color,
+    val tertiaryLight: Color, val onTertiaryLight: Color,
+    val tertiaryContainerLight: Color, val onTertiaryContainerLight: Color,
+)
 
-// ===== On-primary colors =====
-val DarkOnPrimary = Color(0xFF1C1B1F)
-val LightOnPrimary = Color(0xFFFFFFFF)
+// ---- Purple (紫色) — M3 default purple, balanced and elegant ----
+val Accent_Purple = AccentSet(
+    primaryDark = Color(0xFFD0BCFF), onPrimaryDark = Color(0xFF381E72),
+    primaryContainerDark = Color(0xFF4F378B), onPrimaryContainerDark = Color(0xFFEADDFF),
+    secondaryDark = Color(0xFF80DED5), onSecondaryDark = Color(0xFF003734),
+    secondaryContainerDark = Color(0xFF005049), onSecondaryContainerDark = Color(0xFFA7F2EB),
+    tertiaryDark = Color(0xFFFFB3C6), onTertiaryDark = Color(0xFF600032),
+    tertiaryContainerDark = Color(0xFF8A004C), onTertiaryContainerDark = Color(0xFFFFD9E2),
+    primaryLight = Color(0xFF6750A4), onPrimaryLight = Color(0xFFFFFFFF),
+    primaryContainerLight = Color(0xFFEADDFF), onPrimaryContainerLight = Color(0xFF21005D),
+    secondaryLight = Color(0xFF006B5D), onSecondaryLight = Color(0xFFFFFFFF),
+    secondaryContainerLight = Color(0xFFA7F2EB), onSecondaryContainerLight = Color(0xFF00201C),
+    tertiaryLight = Color(0xFFB81552), onTertiaryLight = Color(0xFFFFFFFF),
+    tertiaryContainerLight = Color(0xFFFFD9E2), onTertiaryContainerLight = Color(0xFF3E001D),
+)
 
-// ===== Dark theme primary containers =====
-val PurplePrimaryContainer = Color(0xFF2D2150)
-val BluePrimaryContainer = Color(0xFF1A3060)
-val GreenPrimaryContainer = Color(0xFF1B4A1B)
-val RosePrimaryContainer = Color(0xFF4A2040)
-val OrangePrimaryContainer = Color(0xFF4A3010)
-val TealPrimaryContainer = Color(0xFF1A4040)
+// ---- Blue (蓝色) — Professional, like Google's apps ----
+val Accent_Blue = AccentSet(
+    primaryDark = Color(0xFFB5CCFF), onPrimaryDark = Color(0xFF002C6C),
+    primaryContainerDark = Color(0xFF1C4194), onPrimaryContainerDark = Color(0xFFDCE5FF),
+    secondaryDark = Color(0xFF86D2E8), onSecondaryDark = Color(0xFF003544),
+    secondaryContainerDark = Color(0xFF004D61), onSecondaryContainerDark = Color(0xFFB0EDFF),
+    tertiaryDark = Color(0xFFC5C0FF), onTertiaryDark = Color(0xFF1D0093),
+    tertiaryContainerDark = Color(0xFF3300CA), onTertiaryContainerDark = Color(0xFFE6DEFF),
+    primaryLight = Color(0xFF1B6EF3), onPrimaryLight = Color(0xFFFFFFFF),
+    primaryContainerLight = Color(0xFFDCE5FF), onPrimaryContainerLight = Color(0xFF001A41),
+    secondaryLight = Color(0xFF006878), onSecondaryLight = Color(0xFFFFFFFF),
+    secondaryContainerLight = Color(0xFFB0EDFF), onSecondaryContainerLight = Color(0xFF001F26),
+    tertiaryLight = Color(0xFF4F46C6), onTertiaryLight = Color(0xFFFFFFFF),
+    tertiaryContainerLight = Color(0xFFE6DEFF), onTertiaryContainerLight = Color(0xFF0F0068),
+)
 
-// ===== Light theme primary containers =====
-val PurplePrimaryContainerLight = Color(0xFFE8DCF8)
-val BluePrimaryContainerLight = Color(0xFFD6E4FF)
-val GreenPrimaryContainerLight = Color(0xFFC8E6C9)
-val RosePrimaryContainerLight = Color(0xFFFCE4EC)
-val OrangePrimaryContainerLight = Color(0xFFFFE0B2)
-val TealPrimaryContainerLight = Color(0xFFB2DFDB)
+// ---- Green (绿色) — Natural, calming ----
+val Accent_Green = AccentSet(
+    primaryDark = Color(0xFFA9DBA9), onPrimaryDark = Color(0xFF003910),
+    primaryContainerDark = Color(0xFF1A4F1A), onPrimaryContainerDark = Color(0xFFD3E8D3),
+    secondaryDark = Color(0xFFFCDF8E), onSecondaryDark = Color(0xFF4A2C00),
+    secondaryContainerDark = Color(0xFF6B4100), onSecondaryContainerDark = Color(0xFFFFDEA8),
+    tertiaryDark = Color(0xFF80DED5), onTertiaryDark = Color(0xFF003734),
+    tertiaryContainerDark = Color(0xFF005049), onTertiaryContainerDark = Color(0xFFA7F2EB),
+    primaryLight = Color(0xFF38853B), onPrimaryLight = Color(0xFFFFFFFF),
+    primaryContainerLight = Color(0xFFD3E8D3), onPrimaryContainerLight = Color(0xFF002106),
+    secondaryLight = Color(0xFF885300), onSecondaryLight = Color(0xFFFFFFFF),
+    secondaryContainerLight = Color(0xFFFFDEA8), onSecondaryContainerLight = Color(0xFF2C1700),
+    tertiaryLight = Color(0xFF006B5D), onTertiaryLight = Color(0xFFFFFFFF),
+    tertiaryContainerLight = Color(0xFFA7F2EB), onTertiaryContainerLight = Color(0xFF00201C),
+)
 
-// ===== On-primary-container colors =====
-val DarkOnPrimaryContainer = Color(0xFFE8DCF8)
-val LightOnPrimaryContainer = Color(0xFF1C1B1F)
+// ---- Rose (玫红) — Vibrant, energetic ----
+val Accent_Rose = AccentSet(
+    primaryDark = Color(0xFFFFB3C6), onPrimaryDark = Color(0xFF5C002F),
+    primaryContainerDark = Color(0xFF8A004C), onPrimaryContainerDark = Color(0xFFFFD9E2),
+    secondaryDark = Color(0xFFD7B8FF), onSecondaryDark = Color(0xFF37006A),
+    secondaryContainerDark = Color(0xFF500096), onSecondaryContainerDark = Color(0xFFEDDCFF),
+    tertiaryDark = Color(0xFFFFB87C), onTertiaryDark = Color(0xFF542200),
+    tertiaryContainerDark = Color(0xFF783300), onTertiaryContainerDark = Color(0xFFFFDCC7),
+    primaryLight = Color(0xFFBE2E62), onPrimaryLight = Color(0xFFFFFFFF),
+    primaryContainerLight = Color(0xFFFFD9E2), onPrimaryContainerLight = Color(0xFF3E001D),
+    secondaryLight = Color(0xFF6D2DA8), onSecondaryLight = Color(0xFFFFFFFF),
+    secondaryContainerLight = Color(0xFFEDDCFF), onSecondaryContainerLight = Color(0xFF250059),
+    tertiaryLight = Color(0xFFB85E00), onTertiaryLight = Color(0xFFFFFFFF),
+    tertiaryContainerLight = Color(0xFFFFDCC7), onTertiaryContainerLight = Color(0xFF3B1A00),
+)
 
-// ===== Dark theme secondaries =====
-val PurpleSecondary = Color(0xFF80CBC4)
-val BlueSecondary = Color(0xFF81D4FA)
-val GreenSecondary = Color(0xFFFFCC80)
-val RoseSecondary = Color(0xFFCE93D8)
-val OrangeSecondary = Color(0xFF82B1FF)
-val TealSecondary = Color(0xFFB388FF)
+// ---- Orange (橙色) — Warm, inviting ----
+val Accent_Orange = AccentSet(
+    primaryDark = Color(0xFFFFB87C), onPrimaryDark = Color(0xFF542200),
+    primaryContainerDark = Color(0xFF783300), onPrimaryContainerDark = Color(0xFFFFDCC7),
+    secondaryDark = Color(0xFFB5CCFF), onSecondaryDark = Color(0xFF002C6C),
+    secondaryContainerDark = Color(0xFF1C4194), onSecondaryContainerDark = Color(0xFFDCE5FF),
+    tertiaryDark = Color(0xFFFCDF8E), onTertiaryDark = Color(0xFF4A2C00),
+    tertiaryContainerDark = Color(0xFF6B4100), onTertiaryContainerDark = Color(0xFFFFDEA8),
+    primaryLight = Color(0xFFCC5800), onPrimaryLight = Color(0xFFFFFFFF),
+    primaryContainerLight = Color(0xFFFFDCC7), onPrimaryContainerLight = Color(0xFF411700),
+    secondaryLight = Color(0xFF2D5DA8), onSecondaryLight = Color(0xFFFFFFFF),
+    secondaryContainerLight = Color(0xFFDCE5FF), onSecondaryContainerLight = Color(0xFF001A41),
+    tertiaryLight = Color(0xFF885300), onTertiaryLight = Color(0xFFFFFFFF),
+    tertiaryContainerLight = Color(0xFFFFDEA8), onTertiaryContainerLight = Color(0xFF2C1700),
+)
 
-// ===== Light theme secondaries =====
-val PurpleSecondaryLight = Color(0xFF00897B)
-val BlueSecondaryLight = Color(0xFF0288D1)
-val GreenSecondaryLight = Color(0xFFF57C00)
-val RoseSecondaryLight = Color(0xFF7B1FA2)
-val OrangeSecondaryLight = Color(0xFF1565C0)
-val TealSecondaryLight = Color(0xFF6200EE)
+// ---- Teal (青色) — Fresh, clean ----
+val Accent_Teal = AccentSet(
+    primaryDark = Color(0xFF80E8D6), onPrimaryDark = Color(0xFF00382E),
+    primaryContainerDark = Color(0xFF005144), onPrimaryContainerDark = Color(0xFFA7F2EB),
+    secondaryDark = Color(0xFFD7B8FF), onSecondaryDark = Color(0xFF37006A),
+    secondaryContainerDark = Color(0xFF500096), onSecondaryContainerDark = Color(0xFFEDDCFF),
+    tertiaryDark = Color(0xFFA9DBA9), onTertiaryDark = Color(0xFF003910),
+    tertiaryContainerDark = Color(0xFF1A4F1A), onTertiaryContainerDark = Color(0xFFD3E8D3),
+    primaryLight = Color(0xFF007A6B), onPrimaryLight = Color(0xFFFFFFFF),
+    primaryContainerLight = Color(0xFFA7F2EB), onPrimaryContainerLight = Color(0xFF00201C),
+    secondaryLight = Color(0xFF6D2DA8), onSecondaryLight = Color(0xFFFFFFFF),
+    secondaryContainerLight = Color(0xFFEDDCFF), onSecondaryContainerLight = Color(0xFF250059),
+    tertiaryLight = Color(0xFF38853B), onTertiaryLight = Color(0xFFFFFFFF),
+    tertiaryContainerLight = Color(0xFFD3E8D3), onTertiaryContainerLight = Color(0xFF002106),
+)
 
-// ===== Dark theme secondary containers =====
-val PurpleSecondaryContainer = Color(0xFF1A4040)
-val BlueSecondaryContainer = Color(0xFF1A4050)
-val GreenSecondaryContainer = Color(0xFF4A3010)
-val RoseSecondaryContainer = Color(0xFF402050)
-val OrangeSecondaryContainer = Color(0xFF1A3060)
-val TealSecondaryContainer = Color(0xFF2D2150)
+// Lookup
+val accentMap = mapOf(
+    com.example.comiclibrary.util.ThemeColor.PURPLE to Accent_Purple,
+    com.example.comiclibrary.util.ThemeColor.BLUE to Accent_Blue,
+    com.example.comiclibrary.util.ThemeColor.GREEN to Accent_Green,
+    com.example.comiclibrary.util.ThemeColor.ROSE to Accent_Rose,
+    com.example.comiclibrary.util.ThemeColor.ORANGE to Accent_Orange,
+    com.example.comiclibrary.util.ThemeColor.TEAL to Accent_Teal,
+)
 
-// ===== Light theme secondary containers =====
-val PurpleSecondaryContainerLight = Color(0xFFB2DFDB)
-val BlueSecondaryContainerLight = Color(0xFFB3E5FC)
-val GreenSecondaryContainerLight = Color(0xFFFFE0B2)
-val RoseSecondaryContainerLight = Color(0xFFE1BEE7)
-val OrangeSecondaryContainerLight = Color(0xFFBBDEFB)
-val TealSecondaryContainerLight = Color(0xFFE8DCF8)
-
-// ===== Dark theme tertiaries =====
-val PurpleTertiary = Color(0xFFF48FB1)
-val BlueTertiary = Color(0xFF80DEEA)
-val GreenTertiary = Color(0xFF80CBC4)
-val RoseTertiary = Color(0xFFFFB74D)
-val OrangeTertiary = Color(0xFFFFCC80)
-val TealTertiary = Color(0xFF81C784)
-
-// ===== Light theme tertiaries =====
-val PurpleTertiaryLight = Color(0xFFC2185B)
-val BlueTertiaryLight = Color(0xFF0097A7)
-val GreenTertiaryLight = Color(0xFF00695C)
-val RoseTertiaryLight = Color(0xFFE65100)
-val OrangeTertiaryLight = Color(0xFFF57C00)
-val TealTertiaryLight = Color(0xFF2E7D32)
-
-// ===== Dark theme tertiary containers =====
-val PurpleTertiaryContainer = Color(0xFF4A2040)
-val BlueTertiaryContainer = Color(0xFF1A4040)
-val GreenTertiaryContainer = Color(0xFF1A4040)
-val RoseTertiaryContainer = Color(0xFF4A3010)
-val OrangeTertiaryContainer = Color(0xFF4A3010)
-val TealTertiaryContainer = Color(0xFF1B4A1B)
-
-// ===== Light theme tertiary containers =====
-val PurpleTertiaryContainerLight = Color(0xFFFCE4EC)
-val BlueTertiaryContainerLight = Color(0xFFB2EBF2)
-val GreenTertiaryContainerLight = Color(0xFFB2DFDB)
-val RoseTertiaryContainerLight = Color(0xFFFFE0B2)
-val OrangeTertiaryContainerLight = Color(0xFFFFE0B2)
-val TealTertiaryContainerLight = Color(0xFFC8E6C9)
+fun accentFor(color: com.example.comiclibrary.util.ThemeColor): AccentSet = accentMap[color]!!
