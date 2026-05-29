@@ -148,7 +148,10 @@ fun MainTabsContent(
     onNavigateToTags: () -> Unit,
     onThemeSettings: () -> Unit
 ) {
-    val pagerState = rememberPagerState(pageCount = { BottomNavItem.entries.size })
+    val pagerState = rememberPagerState(
+        pageCount = { BottomNavItem.entries.size },
+        initialPage = 0
+    )
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -161,7 +164,7 @@ fun MainTabsContent(
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(
                                     page = index,
-                                    animationSpec = tween(durationMillis = 250)
+                                    animationSpec = tween(durationMillis = 200)
                                 )
                             }
                         },
@@ -185,7 +188,7 @@ fun MainTabsContent(
             beyondViewportPageCount = 1,
             flingBehavior = PagerDefaults.flingBehavior(
                 state = pagerState,
-                snapAnimationSpec = tween(150)
+                snapAnimationSpec = tween(100)
             )
         ) { page ->
             when (page) {

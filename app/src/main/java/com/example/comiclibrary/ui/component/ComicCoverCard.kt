@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,14 +16,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +35,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.comiclibrary.domain.model.Comic
+
+private val cardShape = RoundedCornerShape(10.dp)
+private val favoriteColor = Color(0xFFFF4081)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -46,12 +50,22 @@ fun ComicCoverCard(
     isSelected: Boolean = false,
     onFavoriteClick: (() -> Unit)? = null
 ) {
+    val coverUri = remember(comic.coverUri) { comic.coverUri?.let { Uri.parse(it) } }
+    val titleGradient = remember {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color.Transparent, Color.Transparent,
+                Color.Black.copy(alpha = 0.75f)
+            )
+        )
+    }
+
     Card(
         modifier = modifier.combinedClickable(
             onClick = onClick,
             onLongClick = onLongClick
         ),
-        shape = RoundedCornerShape(10.dp),
+        shape = cardShape,
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (isSelected) 6.dp else 2.dp
         ),
@@ -63,26 +77,28 @@ fun ComicCoverCard(
         border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
     ) {
         Box {
-            // Fallback placeholder when cover fails to load
-            Icon(
-                Icons.AutoMirrored.Filled.MenuBook,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(0.72f)
-                    .padding(24.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-            )
-
             AsyncImage(
-                model = comic.coverUri?.let { Uri.parse(it) },
+                model = coverUri,
                 contentDescription = comic.title,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(0.72f)
-                    .clip(RoundedCornerShape(10.dp)),
+                    .clip(cardShape),
                 contentScale = ContentScale.Crop
             )
+
+            // 只有在图片 URL 为空时才显示占位图标
+            if (coverUri == null) {
+                Icon(
+                    Icons.AutoMirrored.Filled.MenuBook,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(0.72f)
+                        .padding(24.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                )
+            }
 
             if (selectionMode) {
                 Box(
@@ -90,7 +106,7 @@ fun ComicCoverCard(
                         .fillMaxWidth()
                         .aspectRatio(0.72f)
                         .background(Color.Black.copy(alpha = 0.3f))
-                        .clip(RoundedCornerShape(10.dp)),
+                        .clip(cardShape),
                     contentAlignment = Alignment.TopEnd
                 ) {
                     Icon(
@@ -112,8 +128,8 @@ fun ComicCoverCard(
                         .align(Alignment.TopEnd)
                         .padding(6.dp)
                         .size(24.dp)
-                        .clickable { onFavoriteClick?.invoke() },
-                    tint = if (comic.isFavorite) Color(0xFFFF4081) else Color.White.copy(alpha = 0.85f)
+                        .clickable { onFavoriteClick.invoke() },
+                    tint = if (comic.isFavorite) favoriteColor else Color.White.copy(alpha = 0.85f)
                 )
             }
 
@@ -121,15 +137,8 @@ fun ComicCoverCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(0.72f)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent, Color.Transparent,
-                                Color.Black.copy(alpha = 0.75f)
-                            )
-                        )
-                    ),
+                    .clip(cardShape)
+                    .background(titleGradient),
                 contentAlignment = Alignment.BottomStart
             ) {
                 Text(
