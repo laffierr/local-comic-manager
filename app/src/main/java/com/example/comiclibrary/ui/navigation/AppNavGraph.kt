@@ -1,7 +1,6 @@
 package com.example.comiclibrary.ui.navigation
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -13,10 +12,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -186,9 +184,14 @@ fun MainTabsContent(
                 .fillMaxSize()
                 .padding(innerPadding),
             beyondViewportPageCount = 1,
+            pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+                state = pagerState,
+                orientation = Orientation.Horizontal
+            ),
             flingBehavior = PagerDefaults.flingBehavior(
                 state = pagerState,
-                snapAnimationSpec = tween(100)
+                snapAnimationSpec = tween(100),
+                snapPositionalThreshold = 0.2f
             )
         ) { page ->
             when (page) {

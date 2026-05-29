@@ -67,6 +67,7 @@ Android 漫画管理应用，帮助你整理、浏览和阅读本地漫画收藏
 
 | 版本 | 变更 |
 |------|------|
+| 0.6.5 | 修复滑动切换阈值：降低 snapPositionalThreshold 至 0.2，移除无效的自定义 NestedScrollConnection |
 | 0.6.4 | 修复三点菜单弹出位置、优化滑动切换阈值、ComicCoverCard 性能优化 |
 | 0.6.3 | 优化收藏夹列表滑动性能：预计算状态、共享 DropdownMenu 减少每项开销 |
 | 0.6.2 | 修复收藏夹详情页滑动卡顿：移除 verticalScroll + LazyVerticalStaggeredGrid 嵌套导致的懒加载失效 |
