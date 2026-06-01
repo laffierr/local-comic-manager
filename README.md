@@ -2,6 +2,12 @@
 
 Android 漫画管理应用，帮助你整理、浏览和阅读本地漫画收藏。
 
+## 下载
+
+前往 [Releases 页面](https://github.com/laffierr/local-comic-manager/releases) 下载最新版本 APK，直接安装即可使用。
+
+> 最低要求：Android 8.0 (API 26)
+
 ## 功能列表
 
 ### 漫画管理
