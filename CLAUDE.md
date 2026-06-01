@@ -19,7 +19,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Project Overview
 
-ComicLibrary — an Android comic library manager app built with Jetpack Compose, targeting SDK 36 (min 26).
+ComicLibrary（本地漫画管理） — an Android comic library manager app built with Jetpack Compose, targeting SDK 36 (min 26).
 
 **Tech stack:** Kotlin, Jetpack Compose (Material 3), Hilt DI, Room database, DataStore preferences, Coil image loading, Navigation Compose.
 
